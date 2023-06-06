@@ -2,12 +2,13 @@ import React from 'react';
 import { Row, Col, Form, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import FormContainer from './FormContainer';
+import './LoginPage.css';
 
 const LoginPage = () => {
     return (
         <FormContainer>
-            <h1 className='text-center pt-4 pb-4'>Sign In</h1>
-            <Form>
+            <h1 className='text-center pt-4 pb-4 text-white'>Sign In</h1>
+            <Form className='text-white'>
                 <Form.Group >
                     <Form.Label>Email address</Form.Label>
                     <Form.Control type="email" placeholder="Enter email" />
@@ -17,7 +18,7 @@ const LoginPage = () => {
                     <Form.Control type="password" placeholder="Enter password" />
                 </Form.Group>
                 <div className='text-center'>
-                <Button variant="primary" className='mt-4' type="submit">Submit</Button>
+                    <Button variant="primary" className='mt-4' type="submit">Submit</Button>
                 </div>
             </Form>
 
