@@ -1,7 +1,7 @@
 import React from 'react';
 import { Row, Col, Form, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import FormContainer from './FormContainer';
+import FormContainer from '../component/FormContainer';
 import './LoginPage.css';
 
 const LoginPage = () => {

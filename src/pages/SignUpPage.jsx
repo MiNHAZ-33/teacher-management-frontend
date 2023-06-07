@@ -1,7 +1,7 @@
 import React from 'react';
 import { Row, Col, Form, Button, Dropdown, Container } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import FormContainer from './FormContainer';
+import FormContainer from '../component/FormContainer';
 
 const SignUpPage = () => {
     return (
