@@ -9,7 +9,7 @@ const SignUpPage = () => {
             <FormContainer>
                 <h1 className='text-center pt-4 pb-4 text-white'>Sign Up</h1>
 
-                <Form className='text-white' >
+                <Form className='text-white border border-secondary p-3 rounded' >
                     <Form.Group>
                         <Form.Label>Full Name</Form.Label>
                         <Form.Control type="text" placeholder="Enter full name" />
