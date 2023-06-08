@@ -1,82 +1,42 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { Button, Container, Table, Modal, Form } from 'react-bootstrap';
+import {
+    addItem,
+    showModalToUi,
+    hideModalToUi,
+    updateNewItem,
+    resetNewItem
+} from '../action/biilRateAction';
 
 const BillRatePage = () => {
-    const [items, setItems] = useState([
-        {
-            title: 'Class test',
-            subItems: [
-                {
-                    name: 'CT 1',
-                    price: 10
-                },
-                {
-                    name: 'CT 2',
-                    price: 15
-                }
-            ]
-        },
-        {
-            title: 'Midterm',
-            subItems: [
-                {
-                    name: 'Midterm 1',
-                    price: 20
-                },
-                {
-                    name: 'Midterm 2',
-                    price: 25
-                }
-            ]
-        }
-    ]);
 
-    const [showModal, setShowModal] = useState(false);
-    const [newItem, setNewItem] = useState({
-        title: '',
-        subItemName: '',
-        subItemPrice: ''
-    });
+    const dispatch = useDispatch();
+
+    const itemRed = useSelector(state => state.billRate);
+
+    const { items, showModal, newItem } = itemRed;
+
 
     const handleCloseModal = () => {
-        setShowModal(false);
+        dispatch(hideModalToUi());
     };
 
     const handleShowModal = () => {
-        setShowModal(true);
+
+        dispatch(showModalToUi());
     };
 
     const handleInputChange = (event) => {
         const { name, value } = event.target;
-        setNewItem((prevItem) => ({
-            ...prevItem,
-            [name]: value
-        }));
+        dispatch(updateNewItem(name, value));
     };
 
     const handleSave = () => {
         const { title, subItemName, subItemPrice } = newItem;
-        const newSubItem = {
-            name: subItemName,
-            price: subItemPrice
-        };
-        const updatedItems = [...items];
-        const itemIndex = updatedItems.findIndex((item) => item.title === title);
-        if (itemIndex > -1) {
-            updatedItems[itemIndex].subItems.push(newSubItem);
-        } else {
-            updatedItems.push({
-                title,
-                subItems: [newSubItem]
-            });
-        }
-        setItems(updatedItems);
-        handleCloseModal();
-        setNewItem({
-            title: '',
-            subItemName: '',
-            subItemPrice: ''
-        });
+        dispatch(addItem(title, subItemName, subItemPrice));
+        dispatch(resetNewItem());
+        dispatch(handleCloseModal());
     };
 
     return (
@@ -86,13 +46,14 @@ const BillRatePage = () => {
                 <Table striped bordered hover responsive variant='dark'>
                     <thead>
                         <tr>
-                            <th>Item</th>
-                            <th>Sub-Items</th>
+                            <th>Title</th>
+                            <th>Name</th>
                         </tr>
                     </thead>
                     <tbody>
                         {items.map((item, index) => {
                             return (
+
                                 <tr key={index}>
                                     <td>{item.title}</td>
                                     <td>
@@ -170,5 +131,22 @@ const BillRatePage = () => {
         </div>
     );
 };
+
+// const mapStateToProps = (state) => {
+//     return {
+//         items: state.items,
+//         showModal: state.showModal,
+//         newItem: state.newItem
+//     };
+// };
+
+// const mapDispatchToProps = {
+//     addItem,
+//     showModalToUi,
+//     hideModalToUi,
+//     updateNewItem,
+//     resetNewItem
+// };
+// export default connect(mapStateToProps, mapDispatchToProps)(BillRatePage);
 
 export default BillRatePage;
