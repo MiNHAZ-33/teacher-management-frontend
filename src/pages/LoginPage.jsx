@@ -6,7 +6,7 @@ import './LoginPage.css';
 
 const LoginPage = () => {
     return (
-        <div className='bg-dark'>
+        <div className='bg-dark d-flex flex-column min-vh-100'>
             <FormContainer>
                 <h1 className='text-center pt-4 pb-4 text-white'>Sign In</h1>
                 <Form className='text-white border border-secondary p-3 rounded'>
@@ -32,6 +32,9 @@ const LoginPage = () => {
                     </Col>
                 </Row>
             </FormContainer>
+            <footer className='bg-dark text-white text-center p-4 mt-auto'>
+                <p>© 2023 - Teacher Management System</p>
+            </footer>
         </div>
     )
 }
