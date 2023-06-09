@@ -7,11 +7,13 @@ import SignUpPage from './pages/SignUpPage';
 import BillRatePage from './pages/BillRatePage';
 import BillingPage from './pages/BillingPage';
 import BillTest from './pages/BillTest';
+import LandingPage from './pages/LandingPage';
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path='/' element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignUpPage />} />
         <Route path="/profile" element={<ProfilePage />} />
