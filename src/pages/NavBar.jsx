@@ -11,6 +11,9 @@ function NavBar() {
                         <Nav className="me-auto">
                         </Nav>
                         <Nav>
+                            <Link to={'/profile'} className="nav-link">Profile</Link>
+                        </Nav>
+                        <Nav>
                             <Link to={'/billrate'} className="nav-link">Bill Rate</Link>
                         </Nav>
                         <Nav>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Button, Container, Table, Modal, Form } from 'react-bootstrap';
+import { Button, Container, Table, Modal, Form, Col, Row } from 'react-bootstrap';
 import {
     addItem,
     showModalToUi,
@@ -61,10 +61,10 @@ const BillRatePage = () => {
                                             <tbody>
                                                 {item.subItems.map((subItem, subIndex) => {
                                                     return (
-                                                        <tr key={subIndex}>
-                                                            <td>{subItem.name}</td>
-                                                            <td>{subItem.price} taka</td>
-                                                        </tr>
+                                                        <Row   key={subIndex}>
+                                                            <Col>{subItem.name}</Col>
+                                                            <Col>{subItem.price} taka</Col>
+                                                        </Row>
                                                     );
                                                 })}
                                             </tbody>

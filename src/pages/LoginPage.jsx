@@ -1,10 +1,47 @@
 import React from 'react';
 import { Row, Col, Form, Button } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import FormContainer from '../component/FormContainer';
 import './LoginPage.css';
+import axios from 'axios';
 
 const LoginPage = () => {
+
+    let email;
+    let password;
+
+    const history = useNavigate();
+
+    const emailHandler = (e) => {
+        email = e.target.value;
+    }
+
+    const passwordHandler = (e) => {
+        password = e.target.value;
+
+    }
+
+    const handleSignIn = async () => {
+
+        const getMail = localStorage.getItem('email', JSON.stringify(email));
+        const getPass = localStorage.getItem('password', JSON.stringify(password));
+
+        if (getMail === email && getPass === password) {
+            console.log('success');
+            history('/profile');
+        } else {
+            alert('Invalid Email or Password');
+        }
+
+        // const requestOptions = {
+        //     headers: { 'Content-Type': 'application/json' },
+        //     body: JSON.stringify({ email, password })
+        // };
+        // axios.post('https://localhost:7299/api/Auth/login', requestOptions).then((res) => {
+        //     console.log(res);
+        // });
+    }
+
     return (
         <div className='bg-dark d-flex flex-column min-vh-100'>
             <FormContainer>
@@ -12,14 +49,14 @@ const LoginPage = () => {
                 <Form className='text-white border border-secondary p-3 rounded'>
                     <Form.Group >
                         <Form.Label>Email address</Form.Label>
-                        <Form.Control type="email" placeholder="Enter email" />
+                        <Form.Control onChange={(e) => emailHandler(e)} type="email" placeholder="Enter email" />
                     </Form.Group>
                     <Form.Group className='mt-2'>
                         <Form.Label>Password</Form.Label>
-                        <Form.Control type="password" placeholder="Enter password" />
+                        <Form.Control onChange={(e) => passwordHandler(e)} type="password" placeholder="Enter password" />
                     </Form.Group>
                     <div className='text-center'>
-                        <Button variant="primary" className='mt-4' type="submit">Submit</Button>
+                        <Button onClick={handleSignIn} variant="primary" className='mt-4' type="submit">Submit</Button>
                     </div>
                 </Form>
 
