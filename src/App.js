@@ -8,10 +8,12 @@ import BillRatePage from './pages/BillRatePage';
 import BillingPage from './pages/BillingPage';
 import BillTest from './pages/BillTest';
 import LandingPage from './pages/LandingPage';
+import NavBar from './pages/NavBar';
 
 function App() {
   return (
     <BrowserRouter>
+      <NavBar/>
       <Routes>
         <Route path='/' element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
