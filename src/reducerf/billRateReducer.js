@@ -57,7 +57,7 @@ const initialState = {
                 },
             ]
         },
-        { 
+        {
             title: 'Class test',
             subItems: [
                 {

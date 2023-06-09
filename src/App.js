@@ -6,6 +6,7 @@ import ProfilePage from './pages/ProfilePage';
 import SignUpPage from './pages/SignUpPage';
 import BillRatePage from './pages/BillRatePage';
 import BillingPage from './pages/BillingPage';
+import BillTest from './pages/BillTest';
 
 function App() {
   return (
