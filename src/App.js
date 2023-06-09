@@ -16,7 +16,7 @@ function App() {
         <Route path="/signup" element={<SignUpPage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/billrate" element={<BillRatePage />} />
-        <Route path='/billing' element={<BillingPage />} />
+        <Route path='/billing' element={<BillTest />} />
       </Routes>
     </BrowserRouter>
   );

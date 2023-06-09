@@ -1,245 +1,368 @@
-// import React, { useEffect, useState } from 'react';
-// import { useSelector } from 'react-redux';
-// import { Table, Form, Dropdown } from 'react-bootstrap';
-
-// const BillingPage = () => {
-//     const itemReducer = useSelector((state) => state.billRate);
-//     const items = itemReducer.items;
-//     const [newItems, setNewItems] = useState([]);
-//     const [selectedExamNames, setSelectedExamNames] = useState([]);
-//     const [selectedYears, setSelectedYears] = useState([]);
-//     const [selectedSubjects, setSelectedSubjects] = useState([]);
-//     const [selectedPapers, setSelectedPapers] = useState([]);
-//     const [selectedStudentCounts, setSelectedStudentCounts] = useState([]);
-//     const [selectedTotalDays, setSelectedTotalDays] = useState([]);
-//     const [selectedPaperTypes, setSelectedPaperTypes] = useState([]);
-//     const [amounts, setAmounts] = useState([]);
-
-//     const addingAllElementsInList = () => {
-//         const allItems = items.flatMap((item) => item.subItems);
-//         setNewItems(allItems);
-//         setSelectedExamNames(new Array(allItems.length).fill(''));
-//         setSelectedYears(new Array(allItems.length).fill(''));
-//         setSelectedSubjects(new Array(allItems.length).fill(''));
-//         setSelectedPapers(new Array(allItems.length).fill(''));
-//         setSelectedStudentCounts(new Array(allItems.length).fill(''));
-//         setSelectedTotalDays(new Array(allItems.length).fill(''));
-//         setSelectedPaperTypes(new Array(allItems.length).fill(''));
-//     };
-
-//     useEffect(() => {
-//         addingAllElementsInList();
-//     }, []);
-
-//     const calculateAmount = (index) => {
-//         const paper = selectedPapers[index] || 0;
-//         const studentCount = selectedStudentCounts[index] || 0;
-//         const totalDays = selectedTotalDays[index] || 0;
-//         const paperType = selectedPaperTypes[index] || 0;
-//         const price = newItems[index].price || 0;
-
-//         return paper * studentCount * totalDays * paperType * price;
-//     };
-
-//     const calculateTotalAmount = () => {
-//         return amounts.reduce((total, amount) => total + amount, 0);
-//     };
-
-//     useEffect(() => {
-//         const updatedAmounts = newItems.map((item, index) => calculateAmount(index));
-//         setAmounts(updatedAmounts);
-//     }, [selectedPapers, selectedStudentCounts, selectedTotalDays, selectedPaperTypes]);
+import React, { useEffect, useRef, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { Table, Form, Dropdown } from 'react-bootstrap';
+import { PDFViewer, PDFDownloadLink, Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
 
 
-//     const renderAmounts = () => {
-//         return newItems.map((item, index) => {
-//             const amount = calculateAmount(index);
-//             return (
-//                 <h6 className='text-white text-center' key={index}>
-//                     {amount}
-//                 </h6>
-//             );
-//         });
-//     };
+const styles = StyleSheet.create({
+    table: {
+        display: 'table',
+        width: '100%',
+        borderStyle: 'solid',
+        borderWidth: 1,
+        borderRightWidth: 0,
+        borderBottomWidth: 0,
+    },
+    tableRow: { margin: 'auto', flexDirection: 'row' },
+    tableCell: { margin: 'auto', marginTop: 5, marginBottom: 5, borderStyle: 'solid', borderWidth: 1, borderLeftWidth: 0, borderTopWidth: 0 },
+});
 
 
+const BillingPage = () => {
+    const itemReducer = useSelector((state) => state.billRate);
+    const items = itemReducer.items;
+    const [newItems, setNewItems] = useState([]);
+    const [selectedExamNames, setSelectedExamNames] = useState([]);
+    const [selectedYears, setSelectedYears] = useState([]);
+    const [selectedSubjects, setSelectedSubjects] = useState([]);
+    const [selectedPapers, setSelectedPapers] = useState([]);
+    const [selectedStudentCounts, setSelectedStudentCounts] = useState([]);
+    const [selectedTotalDays, setSelectedTotalDays] = useState([]);
+    const [selectedPaperTypes, setSelectedPaperTypes] = useState([]);
+    const [amounts, setAmounts] = useState([]);
+
+    const addingAllElementsInList = () => {
+        const allItems = items.flatMap((item) => item.subItems);
+        setNewItems(allItems);
+        setSelectedExamNames(new Array(allItems.length).fill(''));
+        setSelectedYears(new Array(allItems.length).fill(''));
+        setSelectedSubjects(new Array(allItems.length).fill(''));
+        setSelectedPapers(new Array(allItems.length).fill(''));
+        setSelectedStudentCounts(new Array(allItems.length).fill(''));
+        setSelectedTotalDays(new Array(allItems.length).fill(''));
+        setSelectedPaperTypes(new Array(allItems.length).fill(''));
+    };
+
+    useEffect(() => {
+        addingAllElementsInList();
+    }, []);
+
+    const calculateAmount = (index) => {
+        const paper = selectedPapers[index] || 0;
+        const studentCount = selectedStudentCounts[index] || 0;
+        const totalDays = selectedTotalDays[index] || 0;
+        const paperType = selectedPaperTypes[index] || 0;
+        const price = newItems[index].price || 0;
+
+        return paper * studentCount * totalDays * paperType * price;
+    };
+
+    const calculateTotalAmount = () => {
+        return amounts.reduce((total, amount) => total + amount, 0);
+    };
+
+    useEffect(() => {
+        const updatedAmounts = newItems.map((item, index) => calculateAmount(index));
+        setAmounts(updatedAmounts);
+    }, [selectedPapers, selectedStudentCounts, selectedTotalDays, selectedPaperTypes]);
 
 
-//     const handleExamNameChange = (index, value) => {
-//         const updatedExamNames = [...selectedExamNames];
-//         updatedExamNames[index] = value;
-//         setSelectedExamNames(updatedExamNames);
-//     };
+    const renderAmounts = () => {
+        return newItems.map((item, index) => {
+            const amount = calculateAmount(index);
+            return (
+                <h6 className='text-white text-center' key={index}>
+                    {amount}
+                </h6>
+            );
+        });
+    };
 
-//     const handleYearChange = (index, value) => {
-//         const updatedYears = [...selectedYears];
-//         updatedYears[index] = value;
-//         setSelectedYears(updatedYears);
-//     };
+    const handleExamNameChange = (index, value) => {
+        const updatedExamNames = [...selectedExamNames];
+        updatedExamNames[index] = value;
+        setSelectedExamNames(updatedExamNames);
+    };
 
-//     const handleSubjectChange = (index, value) => {
-//         const updatedSubjects = [...selectedSubjects];
-//         updatedSubjects[index] = value;
-//         setSelectedSubjects(updatedSubjects);
-//     };
+    const handleYearChange = (index, value) => {
+        const updatedYears = [...selectedYears];
+        updatedYears[index] = value;
+        setSelectedYears(updatedYears);
+    };
 
-//     const handlePaperChange = (index, value) => {
-//         const updatedPapers = [...selectedPapers];
-//         updatedPapers[index] = value;
-//         setSelectedPapers(updatedPapers);
-//     };
+    const handleSubjectChange = (index, value) => {
+        const updatedSubjects = [...selectedSubjects];
+        updatedSubjects[index] = value;
+        setSelectedSubjects(updatedSubjects);
+    };
 
-//     const handleStudentCountChange = (index, value) => {
-//         const updatedStudentCounts = [...selectedStudentCounts];
-//         updatedStudentCounts[index] = value;
-//         setSelectedStudentCounts(updatedStudentCounts);
-//     };
+    const handlePaperChange = (index, value) => {
+        const updatedPapers = [...selectedPapers];
+        updatedPapers[index] = value;
+        setSelectedPapers(updatedPapers);
+    };
 
-//     const handleTotalDaysChange = (index, value) => {
-//         const updatedTotalDays = [...selectedTotalDays];
-//         updatedTotalDays[index] = value;
-//         setSelectedTotalDays(updatedTotalDays);
-//     };
+    const handleStudentCountChange = (index, value) => {
+        const updatedStudentCounts = [...selectedStudentCounts];
+        updatedStudentCounts[index] = value;
+        setSelectedStudentCounts(updatedStudentCounts);
+    };
 
-//     const handlePaperTypeChange = (index, value) => {
-//         const updatedPaperTypes = [...selectedPaperTypes];
-//         updatedPaperTypes[index] = value;
-//         setSelectedPaperTypes(updatedPaperTypes);
-//     };
+    const handleTotalDaysChange = (index, value) => {
+        const updatedTotalDays = [...selectedTotalDays];
+        updatedTotalDays[index] = value;
+        setSelectedTotalDays(updatedTotalDays);
+    };
+
+    const handlePaperTypeChange = (index, value) => {
+        const updatedPaperTypes = [...selectedPaperTypes];
+        updatedPaperTypes[index] = value;
+        setSelectedPaperTypes(updatedPaperTypes);
+    };
+
+    const [pdfData, setPdfData] = useState(null);
+
+    const generatePDF = () => {
+
+        console.log('clicked');
+        const data = (
+            <Document>
+                <Page size='A4'>
+                    <View>
+                        <Table style={styles.table}>
+                            <View style={styles.tableRow}>
+                                <View style={styles.tableCell}>
+                                    <Text>Name</Text>
+                                </View>
+                                <View style={styles.tableCell}>
+                                    <Text>Exam Name</Text>
+                                </View>
+                                <View style={styles.tableCell}>
+                                    <Text>Year</Text>
+                                </View>
+                                <View style={styles.tableCell}>
+                                    <Text>Subject</Text>
+                                </View>
+                                <View style={styles.tableCell}>
+                                    <Text>Paper</Text>
+                                </View>
+                                <View style={styles.tableCell}>
+                                    <Text>No. of Students/Paper</Text>
+                                </View>
+                                <View style={styles.tableCell}>
+                                    <Text>Total Days</Text>
+                                </View>
+                                <View style={styles.tableCell}>
+                                    <Text>Paper Type</Text>
+                                </View>
+                                <View style={styles.tableCell}>
+                                    <Text>Amount</Text>
+                                </View>
+                            </View>
+                            {newItems.map((item, index) => (
+                                <View style={styles.tableRow} key={index}>
+                                    <View style={styles.tableCell}>
+                                        <Text>{item.name}</Text>
+                                    </View>
+                                    <View style={styles.tableCell}>
+                                        <Text>{selectedExamNames[index]}</Text>
+                                    </View>
+                                    <View style={styles.tableCell}>
+                                        <Text>{selectedYears[index]}</Text>
+                                    </View>
+                                    <View style={styles.tableCell}>
+                                        <Text>{selectedSubjects[index]}</Text>
+                                    </View>
+                                    <View style={styles.tableCell}>
+                                        <Text>{selectedPapers[index]}</Text>
+                                    </View>
+                                    <View style={styles.tableCell}>
+                                        <Text>{selectedStudentCounts[index]}</Text>
+                                    </View>
+                                    <View style={styles.tableCell}>
+                                        <Text>{selectedTotalDays[index]}</Text>
+                                    </View>
+                                    <View style={styles.tableCell}>
+                                        <Text>{selectedPaperTypes[index]}</Text>
+                                    </View>
+                                    <View style={styles.tableCell}>
+                                        <Text>{item.price}</Text>
+                                    </View>
+                                </View>
+                            ))}
+                            <View style={[styles.tableRow, styles.totalRow]}>
+                                <View style={styles.tableCell}></View>
+                                <View style={styles.tableCell}></View>
+                                <View style={styles.tableCell}></View>
+                                <View style={styles.tableCell}></View>
+                                <View style={styles.tableCell}></View>
+                                <View style={styles.tableCell}></View>
+                                <View style={styles.tableCell}></View>
+                                <View style={styles.tableCell}></View>
+                                <View style={styles.tableCell}>
+                                    <Text>{amounts.reduce((a, b) => a + b, 0)}</Text>
+                                </View>
+                            </View>
+                        </Table>
+                    </View>
+                </Page>
+
+            </Document>);
+        setPdfData(data);
+
+        console.log(pdfData);
+    }
 
 
-//     return (
-//         <div className='bg-dark d-flex flex-column min-vh-100'>
-//             <h1 className='text-center text-white pt-4 pb-4'>Bill Maker</h1>
-//             <Table striped bordered hover responsive variant='dark'>
-//                 <thead>
-//                     <tr>
-//                         <th>Name</th>
-//                         <th>Exam name</th>
-//                         <th>Year</th>
-//                         <th>Subject</th>
-//                         <th>Paper</th>
-//                         <th>No. of student/paper</th>
-//                         <th>Total days</th>
-//                         <th>Paper Type</th>
-//                         <th>Amount</th>
-//                         <th>Total</th>
-//                     </tr>
-//                 </thead>
-//                 <tbody>
-//                     {newItems.map((item, index) => {
-//                         return (
-//                             <tr key={index}>
-//                                 <td>{item.name}</td>
-//                                 <td>
-//                                     <Dropdown>
-//                                         <Dropdown.Toggle variant='secondary' id='dropdown-basic'>
-//                                             {selectedExamNames[index] ? selectedExamNames[index] : 'Choose Exam Name'}
-//                                         </Dropdown.Toggle>
-//                                         <Dropdown.Menu>
-//                                             <Dropdown.Item onClick={() => handleExamNameChange(index, 'B.Sc Engineering')}>
-//                                                 B.Sc Engineering
-//                                             </Dropdown.Item>
-//                                             <Dropdown.Item onClick={() => handleExamNameChange(index, 'Bachelor of Science')}>
-//                                                 Bachelor of Science
-//                                             </Dropdown.Item>
-//                                             <Dropdown.Item onClick={() => handleExamNameChange(index, 'Bachelor of Arts')}>
-//                                                 Bachelor of Arts
-//                                             </Dropdown.Item>
-//                                             <Dropdown.Item onClick={() => handleExamNameChange(index, 'BBA')}>BBA</Dropdown.Item>
-//                                             <Dropdown.Item onClick={() => handleExamNameChange(index, 'MBA')}>MBA</Dropdown.Item>
-//                                             <Dropdown.Item onClick={() => handleExamNameChange(index, 'MA')}>MA</Dropdown.Item>
-//                                         </Dropdown.Menu>
-//                                     </Dropdown>
-//                                 </td>
-//                                 <td>
-//                                     <Dropdown>
-//                                         <Dropdown.Toggle variant='secondary' id='dropdown-basic'>
-//                                             {selectedYears[index] ? selectedYears[index] : 'Choose year'}
-//                                         </Dropdown.Toggle>
-//                                         <Dropdown.Menu>
-//                                             <Dropdown.Item onClick={() => handleYearChange(index, '2023')}>2023</Dropdown.Item>
-//                                             <Dropdown.Item onClick={() => handleYearChange(index, '2022')}>2022</Dropdown.Item>
-//                                             <Dropdown.Item onClick={() => handleYearChange(index, '2021')}>2021</Dropdown.Item>
-//                                             <Dropdown.Item onClick={() => handleYearChange(index, '2020')}>2020</Dropdown.Item>
-//                                             <Dropdown.Item onClick={() => handleYearChange(index, '2019')}>2019</Dropdown.Item>
-//                                             <Dropdown.Item onClick={() => handleYearChange(index, '2018')}>2018</Dropdown.Item>
-//                                         </Dropdown.Menu>
-//                                     </Dropdown>
-//                                 </td>
-//                                 <td>
-//                                     <Form.Control
-//                                         type='text'
-//                                         placeholder='Subject'
-//                                         value={selectedSubjects[index]}
-//                                         onChange={(e) => handleSubjectChange(index, e.target.value)}
-//                                     />
-//                                 </td>
-//                                 <td>
-//                                     <Form.Control
-//                                         type='number'
-//                                         placeholder='Paper'
-//                                         value={selectedPapers[index]}
-//                                         onChange={(e) => handlePaperChange(index, e.target.value)}
-//                                     />
-//                                 </td>
-//                                 <td>
-//                                     <Form.Control
-//                                         type='number'
-//                                         placeholder='No. of std'
-//                                         value={selectedStudentCounts[index]}
-//                                         onChange={(e) => handleStudentCountChange(index, e.target.value)}
-//                                     />
-//                                 </td>
-//                                 <td>
-//                                     <Form.Control
-//                                         type='number'
-//                                         placeholder='Total Days'
-//                                         value={selectedTotalDays[index]}
-//                                         onChange={(e) => handleTotalDaysChange(index, e.target.value)}
-//                                     />
-//                                 </td>
-//                                 <td>
-//                                     <Form.Control
-//                                         type='number'
-//                                         placeholder='Paper Type'
-//                                         value={selectedPaperTypes[index]}
-//                                         onChange={(e) => handlePaperTypeChange(index, e.target.value)}
-//                                     />
-//                                 </td>
-//                                 <td>
-//                                     <h6 className='text-white text-center'>{item.price}</h6>
-//                                 </td>
-//                                 <td>
-//                                     <h6 className='text-white text-center'>{renderAmounts()[index]}</h6>
-//                                 </td>
-//                             </tr>
-//                         );
-//                     })}
-//                     <tr>
-//                         <td></td>
-//                         <td></td>
-//                         <td></td>
-//                         <td></td>
-//                         <td></td>
-//                         <td></td>
-//                         <td></td>
-//                         <td></td>
-//                         <td>
-//                             <h6 className='text-white text-center'>Total</h6>
-//                         </td>
-//                         <td>
-//                             <h6 className='text-white text-center'>{amounts.reduce((a, b) => a + b, 0)}</h6>
-//                         </td>
-//                     </tr>
-//                 </tbody>
-//             </Table>
-//             <h2>Hi</h2>
-//             <footer className='bg-dark text-white text-center p-4 mt-auto'>
-//                 <p>© 2023 - Teacher Management System</p>
-//             </footer>
-//         </div>
-//     );
-// };
+    return (
+        <div className='bg-dark d-flex flex-column min-vh-100'>
+            <h1 className='text-center text-white pt-4 pb-4'>Bill Maker</h1>
+            <Table striped bordered hover responsive variant='dark'>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Exam name</th>
+                        <th>Year</th>
+                        <th>Subject</th>
+                        <th>Paper</th>
+                        <th>No. of student/paper</th>
+                        <th>Total days</th>
+                        <th>Paper Type</th>
+                        <th>Amount</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {newItems.map((item, index) => {
+                        return (
+                            <tr key={index}>
+                                <td>{item.name}</td>
+                                <td>
+                                    <Dropdown>
+                                        <Dropdown.Toggle variant='secondary' id='dropdown-basic'>
+                                            {selectedExamNames[index] ? selectedExamNames[index] : 'Choose Exam Name'}
+                                        </Dropdown.Toggle>
+                                        <Dropdown.Menu>
+                                            <Dropdown.Item onClick={() => handleExamNameChange(index, 'B.Sc Engineering')}>
+                                                B.Sc Engineering
+                                            </Dropdown.Item>
+                                            <Dropdown.Item onClick={() => handleExamNameChange(index, 'Bachelor of Science')}>
+                                                Bachelor of Science
+                                            </Dropdown.Item>
+                                            <Dropdown.Item onClick={() => handleExamNameChange(index, 'Bachelor of Arts')}>
+                                                Bachelor of Arts
+                                            </Dropdown.Item>
+                                            <Dropdown.Item onClick={() => handleExamNameChange(index, 'BBA')}>BBA</Dropdown.Item>
+                                            <Dropdown.Item onClick={() => handleExamNameChange(index, 'MBA')}>MBA</Dropdown.Item>
+                                            <Dropdown.Item onClick={() => handleExamNameChange(index, 'MA')}>MA</Dropdown.Item>
+                                        </Dropdown.Menu>
+                                    </Dropdown>
+                                </td>
+                                <td>
+                                    <Dropdown>
+                                        <Dropdown.Toggle variant='secondary' id='dropdown-basic'>
+                                            {selectedYears[index] ? selectedYears[index] : 'Choose year'}
+                                        </Dropdown.Toggle>
+                                        <Dropdown.Menu>
+                                            <Dropdown.Item onClick={() => handleYearChange(index, '2023')}>2023</Dropdown.Item>
+                                            <Dropdown.Item onClick={() => handleYearChange(index, '2022')}>2022</Dropdown.Item>
+                                            <Dropdown.Item onClick={() => handleYearChange(index, '2021')}>2021</Dropdown.Item>
+                                            <Dropdown.Item onClick={() => handleYearChange(index, '2020')}>2020</Dropdown.Item>
+                                            <Dropdown.Item onClick={() => handleYearChange(index, '2019')}>2019</Dropdown.Item>
+                                            <Dropdown.Item onClick={() => handleYearChange(index, '2018')}>2018</Dropdown.Item>
+                                        </Dropdown.Menu>
+                                    </Dropdown>
+                                </td>
+                                <td>
+                                    <Form.Control
+                                        type='text'
+                                        placeholder='Subject'
+                                        value={selectedSubjects[index]}
+                                        onChange={(e) => handleSubjectChange(index, e.target.value)}
+                                    />
+                                </td>
+                                <td>
+                                    <Form.Control
+                                        type='number'
+                                        placeholder='Paper'
+                                        value={selectedPapers[index]}
+                                        onChange={(e) => handlePaperChange(index, e.target.value)}
+                                    />
+                                </td>
+                                <td>
+                                    <Form.Control
+                                        type='number'
+                                        placeholder='No. of std'
+                                        value={selectedStudentCounts[index]}
+                                        onChange={(e) => handleStudentCountChange(index, e.target.value)}
+                                    />
+                                </td>
+                                <td>
+                                    <Form.Control
+                                        type='number'
+                                        placeholder='Total Days'
+                                        value={selectedTotalDays[index]}
+                                        onChange={(e) => handleTotalDaysChange(index, e.target.value)}
+                                    />
+                                </td>
+                                <td>
+                                    <Form.Control
+                                        type='number'
+                                        placeholder='Paper Type'
+                                        value={selectedPaperTypes[index]}
+                                        onChange={(e) => handlePaperTypeChange(index, e.target.value)}
+                                    />
+                                </td>
+                                <td>
+                                    <h6 className='text-white text-center'>{item.price}</h6>
+                                </td>
+                                <td>
+                                    <h6 className='text-white text-center'>{renderAmounts()[index]}</h6>
+                                </td>
+                            </tr>
+                        );
+                    })}
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <h6 className='text-white text-center'>Total</h6>
+                        </td>
+                        <td>
+                            <h6 className='text-white text-center'>{amounts.reduce((a, b) => a + b, 0)}</h6>
+                        </td>
+                    </tr>
+                </tbody>
+            </Table>
+            <div className="text-center text-white mt-4">
+                <button className="btn btn-primary" onClick={generatePDF}>
+                    Generate PDF
+                </button>
+            </div>
+            <div style={{ display: 'none' }}>
+                <PDFDownloadLink document={<Document><Text>'HI'</Text></Document>} fileName="billing.pdf">
+                    {({ blob, url, loading, error }) =>
+                        loading ? 'Generating PDF...' : <a href={url}>Download PDF</a>
+                    }
+                </PDFDownloadLink>
+                <div style={{ display: 'none' }}>
+                    <PDFViewer width="100%" height="600px">
+                        {pdfData}
+                    </PDFViewer>
+                </div>
+            </div>
+            <h2>Hi</h2>
+            <footer className='bg-dark text-white text-center p-4 mt-auto'>
+                <p>© 2023 - Teacher Management System</p>
+            </footer>
+        </div>
+    );
+};
 
-// export default BillingPage;
+export default BillingPage;
